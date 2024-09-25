@@ -352,33 +352,13 @@ function files(index) {
   return data.split("\n")[index];
 }
 
+
 const frameCount = 300;
 
 const images = [];
 const imageSeq = {
   frame: 1,
 };
-
-function preloadImages() {
-  let loadedImages = 0;
-  const promises = [];
-
-  for (let i = 0; i < frameCount; i++) {
-    const img = new Image();
-    const promise = new Promise((resolve, reject) => {
-      img.src = files(i);
-      img.onload = () => {
-        loadedImages++;
-        resolve();
-      };
-      img.onerror = reject;
-    });
-    images.push(img);
-    promises.push(promise);
-  }
-
-  return Promise.all(promises);
-}
 
 for (let i = 0; i < frameCount; i++) {
   const img = new Image();
@@ -400,32 +380,6 @@ gsap.to(imageSeq, {
   },
   onUpdate: render,
 });
-
-function initAnimation() {
-  gsap.to(imageSeq, {
-    frame: frameCount - 1,
-    snap: "frame",
-    ease: "none",
-    scrollTrigger: {
-      scrub: 0.15,
-      trigger: "#page>canvas",
-      start: "top top",
-      end: "600% top",
-      scroller: "#main",
-    },
-    onUpdate: render,
-  });
-
-  ScrollTrigger.create({
-    trigger: "#page>canvas",
-    pin: true,
-    scroller: "#main",
-    start: "top top",
-    end: "600% top",
-  });
-
-  render(); // Initial render
-}
 
 images[1].onload = render;
 
@@ -481,11 +435,3 @@ gsap.to("#page3",{
     scroller:`#main`
   }
 });
-
-window.onload = () => {
-  preloadImages().then(() => {
-    initAnimation();
-  }).catch((error) => {
-    console.error("Image failed to load:", error);
-  });
-};
