@@ -352,6 +352,8 @@ function files(index) {
   return data.split("\n")[index];
 }
 
+window.onload(files);
+
 const frameCount = 300;
 
 const images = [];
